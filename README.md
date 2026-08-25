@@ -53,6 +53,8 @@ UNIT05_OUTPUT_SFTP_DIR=<restricted output directory>
 
 If delivery is not configured or the desktop is offline, results remain in `outbox` and are retried without blocking later renders.
 
+For Vast containers without `/dev/net/tun`, `deploy/tailscaled-userspace.sh` runs Tailscale in userspace mode under Supervisor. `unit05-delivery-bridge` forwards local port `10022` through `tailscale nc`; run `deploy/configure-delivery.sh` to persist the corresponding SFTP settings. The Windows editor setup scripts in `tools/` install OpenSSH with a tailnet-only firewall rule and add the dedicated SFTP-only Unit05 public key.
+
 ## Install on the Vast template
 
 With the project copied to `/workspace/unit05`:
@@ -67,6 +69,12 @@ The installer is idempotent. Configuration examples are in `deploy/unit05.env.ex
 ## Dashboard
 
 The dashboard is served on the configured host and port. It reports Executor, Comfy, GPU, Tailscale, destination-link, folder queue, current-node/progress, timings, pending delivery, and failures. Bind it through Tailscale Serve or an SSH tunnel; do not expose it publicly without authentication.
+
+Once the node is logged into Tailscale, publish the localhost-only dashboard privately with:
+
+```bash
+tailscale --socket=/run/tailscale/tailscaled.sock serve --bg --yes 18765
+```
 
 ## Safety
 
