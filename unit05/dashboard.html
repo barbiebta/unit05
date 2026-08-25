@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>unit05</title>
+  <style>
+    :root { color-scheme: dark; --bg:#10100f; --panel:#1a1917; --line:#35312c; --text:#f0e9df; --muted:#a9a096; --good:#7ecb9c; --bad:#e78383; --hot:#e6a25f; }
+    * { box-sizing:border-box } body { margin:0; background:var(--bg); color:var(--text); font:14px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    main { max-width:1440px; margin:auto; padding:22px; } header { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:18px; }
+    h1 { margin:0; font:700 26px/1.1 system-ui,sans-serif; letter-spacing:-.04em } h2 { margin:0 0 12px; font-size:13px; text-transform:uppercase; color:var(--muted); letter-spacing:.12em }
+    .sub { color:var(--muted); margin-top:5px } .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:15px; min-width:0; } .wide { grid-column:span 4 } .double { grid-column:span 2 }
+    .health { display:flex; align-items:center; gap:8px; font-weight:700; } .dot { width:9px; height:9px; border-radius:50%; background:var(--bad); box-shadow:0 0 0 3px #e7838320; }
+    .ok .dot { background:var(--good); box-shadow:0 0 0 3px #7ecb9c20; } .value { margin-top:8px; color:var(--muted); overflow-wrap:anywhere; }
+    .current { display:grid; grid-template-columns:1fr auto; gap:10px; } .current strong { font-size:18px; } progress { width:100%; height:10px; margin-top:12px; accent-color:var(--hot); }
+    table { width:100%; border-collapse:collapse; } th,td { padding:9px 8px; border-top:1px solid var(--line); text-align:left; vertical-align:top; } th { color:var(--muted); font-size:11px; text-transform:uppercase; }
+    code { color:#f2bf87 } .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 7px; color:var(--muted); }
+    .error { color:var(--bad); white-space:pre-wrap; } ul { margin:0; padding-left:18px; } .empty { color:var(--muted); }
+    @media (max-width:900px) { .grid { grid-template-columns:1fr 1fr } .wide { grid-column:span 2 } .double { grid-column:span 2 } }
+    @media (max-width:560px) { main { padding:12px } .grid { grid-template-columns:1fr } .wide,.double { grid-column:span 1 } header { align-items:start; flex-direction:column } }
+  </style>
+</head>
+<body><main>
+  <header><div><h1>unit05</h1><div class="sub">folder queue · ComfyUI · delivery home</div></div><div id="updated" class="sub">connecting…</div></header>
+  <div class="grid">
+    <section class="panel"><h2>Executor</h2><div id="executorHealth" class="health"><i class="dot"></i><span>unknown</span></div><div id="executorValue" class="value"></div></section>
+    <section class="panel"><h2>ComfyUI</h2><div id="comfyHealth" class="health"><i class="dot"></i><span>unknown</span></div><div id="comfyValue" class="value"></div></section>
+    <section class="panel"><h2>Editor destination</h2><div id="deliveryHealth" class="health"><i class="dot"></i><span>unknown</span></div><div id="deliveryValue" class="value"></div></section>
+    <section class="panel"><h2>Tailscale</h2><div id="tailscaleHealth" class="health"><i class="dot"></i><span>unknown</span></div><div id="tailscaleValue" class="value"></div></section>
+    <section class="panel wide"><h2>Current job</h2><div id="current"></div></section>
+    <section class="panel double"><h2>Input folder</h2><div id="inputs"></div></section>
+    <section class="panel double"><h2>Outbox / failed</h2><div id="outbox"></div></section>
+    <section class="panel wide"><h2>Journal</h2><div style="overflow:auto"><table><thead><tr><th>Job</th><th>State</th><th>Prompt</th><th>Updated</th><th>Timing</th><th>Error</th></tr></thead><tbody id="jobs"></tbody></table></div></section>
+    <section class="panel wide"><h2>Server environment</h2><div id="environment" class="value"></div></section>
+  </div>
+</main><script>
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function health(id, ok, label, detail='') { const el=document.getElementById(id+'Health'); el.className='health '+(ok?'ok':''); el.querySelector('span').textContent=label; document.getElementById(id+'Value').textContent=detail; }
+function list(values) { return values?.length ? '<ul>'+values.map(v=>`<li>${esc(v)}</li>`).join('')+'</ul>' : '<span class="empty">empty</span>'; }
+async function refresh() {
+  try {
+    const r=await fetch('/api/status',{cache:'no-store'}); const s=await r.json();
+    document.getElementById('updated').textContent='updated '+new Date().toLocaleTimeString();
+    health('executor',s.healthy,s.healthy?'running':'stopped','since '+(s.started_at||'unknown'));
+    const cq=s.comfy?.queue;
+    const comfyDetail=cq?`${cq.running_count} running · ${cq.pending_count} pending${cq.running_prompt_ids?.length?' · '+cq.running_prompt_ids.join(', '):''}`:(s.comfy?.detail||'');
+    health('comfy',s.comfy?.healthy,s.comfy?.healthy?'healthy':'unavailable',comfyDetail);
+    health('delivery',s.delivery?.healthy,s.delivery?.configured?(s.delivery?.healthy?'connected':'unavailable'):'not configured',s.delivery?.destination||s.delivery?.detail||'');
+    health('tailscale',s.tailscale?.healthy,s.tailscale?.healthy?'running':(s.tailscale?.installed?'unavailable':'not installed'),s.tailscale?.detail||'');
+    const c=s.current;
+    document.getElementById('current').innerHTML=c?`<div class="current"><div><strong>${esc(c.title||c.job_id)}</strong><div class="value"><span class="pill">${esc(c.state)}</span> · prompt ${esc(c.prompt_id||'not submitted')} · node ${esc(c.node||'—')}</div></div><div>${esc(c.progress_percent??'')} ${c.progress_percent!=null?'%':''}</div></div><progress max="100" value="${Number(c.progress_percent||0)}"></progress><div class="value">${esc(c.detail||c.event||'')}</div>`:'<span class="empty">idle</span>';
+    document.getElementById('inputs').innerHTML='<strong>inputs</strong>'+list(s.folders?.inputs)+'<br><br><strong>working</strong>'+list(s.folders?.working);
+    document.getElementById('outbox').innerHTML='<strong>outbox</strong>'+list(s.folders?.outbox)+'<br><br><strong>failed</strong>'+list(s.folders?.failed);
+    document.getElementById('jobs').innerHTML=(s.jobs||[]).map(j=>{const t=j.metadata?.timing||{};return `<tr><td><code>${esc(j.job_id)}</code></td><td><span class="pill">${esc(j.state)}</span></td><td>${esc(j.prompt_id||'')}</td><td>${esc(j.updated_at)}</td><td>${esc(t.comfy_execution_seconds??'')} ${t.comfy_execution_seconds!=null?'s':''}</td><td class="error">${esc(j.error||'')}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">No jobs yet.</td></tr>';
+    document.getElementById('environment').textContent=Object.entries(s.environment||{}).map(([k,v])=>`${k}: ${v}`).join(' · ')||'not yet recorded';
+  } catch(e) { document.getElementById('updated').textContent='dashboard link failed: '+e; }
+}
+refresh(); setInterval(refresh,2000);
+</script></body></html>

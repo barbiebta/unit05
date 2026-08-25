@@ -1,0 +1,532 @@
+{
+  "2568": {
+    "inputs": {
+      "frame_rate": [
+        "2730",
+        8
+      ],
+      "codec": "Auto",
+      "container": "Auto",
+      "bit_depth": "Auto",
+      "quality": 21,
+      "log_level": "Standard",
+      "pingpong": false,
+      "save_metadata": true,
+      "filename_prefix": "video/%date:yyyy-MM-dd%/%date:hhmmss%",
+      "save_output": true,
+      "pass_frames": false,
+      "crop_to_audio": false,
+      "audio_codec": "Auto",
+      "audio_bitrate": "192k",
+      "save_first_frame": false,
+      "save_last_frame": false,
+      "images": [
+        "1512:2677",
+        0
+      ],
+      "audio": [
+        "1512:2675",
+        0
+      ]
+    },
+    "class_type": "DaSiWa_EnhancedVideoCombine",
+    "_meta": {
+      "title": "DaSiWa Enhanced Video Combine"
+    }
+  },
+  "2678": {
+    "inputs": {
+      "stack_data": "[{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1},{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1},{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1},{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1},{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1},{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1},{\"on\":true,\"lora\":\"None\",\"str\":1,\"vs\":1,\"as\":1}]",
+      "model_type": "Basic",
+      "model": [
+        "2730",
+        5
+      ],
+      "clip": [
+        "1512:2587",
+        0
+      ]
+    },
+    "class_type": "DaSiWa_LTX2LoraLoader",
+    "_meta": {
+      "title": "DaSiWa Advanced LoRA Loader"
+    }
+  },
+  "2730": {
+    "inputs": {
+      "mode": "REF2VA",
+      "prompt": "subject_definitions:\n<Subject 1> is represented by <Picture 1>.\n\nsummary:\n[reference generation] <Subject 1> performs the requested action.\n\nretention_analysis:\nRetain the identifying details from <Picture 1>.\n\ndetailed_description:\n[Shot 1] <Subject 1> performs the requested action in a continuous shot.\n\noverall_soundscape:\nN/A\n\nnon_diegetic_music:\nN/A",
+      "width": 768,
+      "height": 1344,
+      "duration": 5,
+      "ref_image_size": "match",
+      "timeline_data": "{\"version\":1,\"items\":[],\"prompt_blocks\":[],\"resolution\":{\"input_scaling\":\"Auto\"}}",
+      "builder_state": "{\"version\":1,\"mode\":\"REF2VA\",\"duration\":5,\"prompt_mode\":\"structured\"}",
+      "frame_rate": 24.0,
+      "fl2va_model": [
+        "1512:1536",
+        0
+      ],
+      "ref2va_model": [
+        "1512:2663",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3Director",
+    "_meta": {
+      "title": "MiniMax H3 Director"
+    }
+  },
+  "2737": {
+    "inputs": {
+      "max_resolution": 1024,
+      "jpeg_quality": 80,
+      "suppress_default_preview": true,
+      "preview_frames": 120,
+      "preview_fps": 8,
+      "tiny_vae": "taeh3.safetensors",
+      "model": [
+        "1512:2736",
+        0
+      ]
+    },
+    "class_type": "ModelPreviewOverrideKJ",
+    "_meta": {
+      "title": "Model Preview Override"
+    }
+  },
+  "1512:2586": {
+    "inputs": {
+      "unet_name": "dasiwa_minimax_h3_ref2va_v1_hybrid_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "1512:2588": {
+    "inputs": {
+      "unet_name": "dasiwa_minimax_h3_ref2va_v1_hybrid_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "1512:2669": {
+    "inputs": {
+      "samples": [
+        "1512:2668",
+        0
+      ],
+      "vae": [
+        "1512:2585",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
+    }
+  },
+  "1512:2587": {
+    "inputs": {
+      "clip_name": "qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors",
+      "type": "minimax",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "1512:2668": {
+    "inputs": {
+      "noise": [
+        "1512:2600",
+        0
+      ],
+      "guider": [
+        "1512:2667",
+        0
+      ],
+      "sampler": [
+        "1512:2598",
+        0
+      ],
+      "sigmas": [
+        "1512:2679",
+        0
+      ],
+      "latent_image": [
+        "1512:2700",
+        1
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "1512:2598": {
+    "inputs": {
+      "sampler_name": "res_multistep"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "1512:2671": {
+    "inputs": {
+      "samples": [
+        "1512:2668",
+        0
+      ],
+      "vae": [
+        "1512:2584",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "1512:2590": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 25,
+      "denoise": 1.0,
+      "model": [
+        "2678",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "1512:2679": {
+    "inputs": {
+      "scheduler": "simple",
+      "steps": 25,
+      "denoise": 1.0,
+      "model": [
+        "2678",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "1512:2663": {
+    "inputs": {
+      "enable_fp16_accumulation": true,
+      "model": [
+        "1512:2720",
+        0
+      ]
+    },
+    "class_type": "ModelPatchTorchSettings",
+    "_meta": {
+      "title": "Model Patch Torch Settings"
+    }
+  },
+  "1512:2630": {
+    "inputs": {
+      "samples": [
+        "1512:2591",
+        0
+      ],
+      "vae": [
+        "1512:2584",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "1512:2631": {
+    "inputs": {
+      "samples": [
+        "1512:2591",
+        0
+      ],
+      "vae": [
+        "1512:2585",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeAudio",
+    "_meta": {
+      "title": "VAE Decode Audio"
+    }
+  },
+  "1512:2584": {
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE Video"
+    }
+  },
+  "1512:2700": {
+    "inputs": {
+      "clip": [
+        "1512:2587",
+        0
+      ],
+      "vae": [
+        "1512:2584",
+        0
+      ],
+      "guide": [
+        "2730",
+        0
+      ],
+      "audio_vae": [
+        "1512:2585",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3DirectorGuide",
+    "_meta": {
+      "title": "MiniMax H3 Director Guide"
+    }
+  },
+  "1512:2701": {
+    "inputs": {
+      "clip": [
+        "2678",
+        1
+      ],
+      "vae": [
+        "1512:2584",
+        0
+      ],
+      "guide": [
+        "2730",
+        0
+      ],
+      "audio_vae": [
+        "1512:2585",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3DirectorGuide",
+    "_meta": {
+      "title": "MiniMax H3 Director Guide"
+    }
+  },
+  "1512:2720": {
+    "inputs": {
+      "attention": "comfy kitchen attention",
+      "model": [
+        "1512:2588",
+        0
+      ]
+    },
+    "class_type": "ModelAttentionBackend",
+    "_meta": {
+      "title": "ModelAttentionBackend"
+    }
+  },
+  "1512:2585": {
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE Audio"
+    }
+  },
+  "1512:2675": {
+    "inputs": {
+      "switch": [
+        "2730",
+        6
+      ],
+      "on_false": [
+        "1512:2669",
+        0
+      ],
+      "on_true": [
+        "1512:2631",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "1512:2677": {
+    "inputs": {
+      "switch": [
+        "2730",
+        6
+      ],
+      "on_false": [
+        "1512:2671",
+        0
+      ],
+      "on_true": [
+        "1512:2630",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "1512:2691": {
+    "inputs": {
+      "shift_video": 12.0,
+      "shift_audio": 3.0,
+      "model": [
+        "2678",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3SigmaShift",
+    "_meta": {
+      "title": "ModelSamplingMiniMaxH3"
+    }
+  },
+  "1512:2736": {
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "1512:2691",
+        0
+      ],
+      "on_true": [
+        "1512:2692",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "1512:2667": {
+    "inputs": {
+      "model": [
+        "2737",
+        0
+      ],
+      "conditioning": [
+        "1512:2700",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
+    }
+  },
+  "1512:2600": {
+    "inputs": {
+      "noise_seed": 616271471367168
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "1512:2591": {
+    "inputs": {
+      "noise": [
+        "1512:2600",
+        0
+      ],
+      "guider": [
+        "1512:2592",
+        0
+      ],
+      "sampler": [
+        "1512:2598",
+        0
+      ],
+      "sigmas": [
+        "1512:2590",
+        0
+      ],
+      "latent_image": [
+        "1512:2701",
+        1
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "1512:2692": {
+    "inputs": {
+      "shift_video": 12.0,
+      "shift_audio": 3.0,
+      "model": [
+        "2678",
+        0
+      ]
+    },
+    "class_type": "MiniMaxH3SigmaShift",
+    "_meta": {
+      "title": "ModelSamplingMiniMaxH3"
+    }
+  },
+  "1512:2592": {
+    "inputs": {
+      "model": [
+        "2737",
+        0
+      ],
+      "conditioning": [
+        "1512:2701",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "Basic Guider"
+    }
+  },
+  "1512:2719": {
+    "inputs": {
+      "attention": "comfy kitchen attention",
+      "model": [
+        "1512:2586",
+        0
+      ]
+    },
+    "class_type": "ModelAttentionBackend",
+    "_meta": {
+      "title": "ModelAttentionBackend"
+    }
+  },
+  "1512:1536": {
+    "inputs": {
+      "enable_fp16_accumulation": true,
+      "model": [
+        "1512:2719",
+        0
+      ]
+    },
+    "class_type": "ModelPatchTorchSettings",
+    "_meta": {
+      "title": "Model Patch Torch Settings"
+    }
+  }
+}

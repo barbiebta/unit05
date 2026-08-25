@@ -1,0 +1,30 @@
+[project]
+name = "unit05"
+version = "0.1.0"
+description = "Folder-driven MiniMax H3 executor for ComfyUI"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.116,<1",
+  "uvicorn>=0.35,<1",
+  "websocket-client>=1.8,<2",
+  "paramiko>=3.5,<5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4,<9"]
+
+[project.scripts]
+unit05 = "unit05.app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["unit05"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"unit05/dashboard.html" = "unit05/dashboard.html"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
