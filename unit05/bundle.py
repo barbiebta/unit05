@@ -54,6 +54,23 @@ def _read_json(archive: zipfile.ZipFile, name: str) -> Any:
         raise BundleError(f"Invalid JSON in {name}: {error}") from error
 
 
+def _normalize_legacy_scaling(manifest: dict[str, Any]) -> None:
+    """Translate Dummyplug's short-lived combined scaling field in memory.
+
+    Legacy bundles used ``input_scaling`` for the Director's ``ref_image_size``
+    value.  Leave the archive untouched so its declared checksum still verifies;
+    only the manifest passed to the executor receives the modern split fields.
+    """
+    generation = manifest.get("generation")
+    if not isinstance(generation, dict) or "ref_image_size" in generation:
+        return
+    legacy_value = generation.get("input_scaling")
+    if legacy_value not in {"match", "max"}:
+        return
+    generation["ref_image_size"] = legacy_value
+    generation["input_scaling"] = "Auto"
+
+
 def _validate_manifest(manifest: dict[str, Any]) -> None:
     if manifest.get("schema") != SUPPORTED_SCHEMA:
         raise BundleError(f"Unsupported bundle schema: {manifest.get('schema')!r}")
@@ -159,6 +176,7 @@ def extract_bundle(
             manifest = _read_json(archive, "manifest.json")
             if not isinstance(manifest, dict):
                 raise BundleError("manifest.json must contain an object")
+            _normalize_legacy_scaling(manifest)
             _validate_manifest(manifest)
             checksums = _read_json(archive, "checksums.json")
             if not isinstance(checksums, dict):
