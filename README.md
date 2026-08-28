@@ -76,6 +76,30 @@ Once the node is logged into Tailscale, publish the localhost-only dashboard pri
 tailscale --socket=/run/tailscale/tailscaled.sock serve --bg --yes 18765
 ```
 
+## JoyCaption prompt fermentation
+
+`unit05.joycaption` and `unit05.living_prompt` are reusable building blocks for video loops that
+derive the next prompt from the last generated chunk. The current Instrumentality experiment
+extracts a representative frame, asks JoyCaption to describe every character as an
+anthropomorphic rabbit, atomizes the result, and combines those generated fragments with
+user-written fragments that persist until explicitly edited or removed. Each generation keeps an
+exact prompt snapshot in bounded history.
+
+JoyCaption can remain localhost-only on the editor. Start a reconnecting reverse SSH bridge so it
+appears only on Unit05 loopback:
+
+```powershell
+.\deploy\start-joycaption-bridge.ps1 `
+  -Background `
+  -Unit05Host root@UNIT05_HOST `
+  -SshPort UNIT05_SSH_PORT `
+  -IdentityFile "$env:USERPROFILE\.ssh\runpod_ed25519"
+```
+
+Copy `deploy/unit05-joycaption.env.example` to a root-readable configuration file on Unit05 and
+set the API key. The default client endpoint is `http://127.0.0.1:18000/v1`; no provider address,
+container hostname, or current rebuild number is embedded in the Python modules.
+
 ## Safety
 
 - ZIP traversal and undeclared files are rejected.
