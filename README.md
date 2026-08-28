@@ -85,6 +85,12 @@ anthropomorphic rabbit, atomizes the result, and combines those generated fragme
 user-written fragments that persist until explicitly edited or removed. Each generation keeps an
 exact prompt snapshot in bounded history.
 
+`unit05.temporal_steering` deterministically derives temporal conditioning from the living
+prompt's language. Calm cues select slow or double-slow bookends, neutral language selects
+uncompressed bookends, energetic language selects compressed motion, and only the highest
+energy band also inverts the bookends. This keeps pacing reproducible without a separate
+temporal-control queue.
+
 JoyCaption can remain localhost-only on the editor. Start a reconnecting reverse SSH bridge so it
 appears only on Unit05 loopback:
 
