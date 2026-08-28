@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from unit05.joycaption import JoyCaptionConfig, atomize_caption
+from unit05.joycaption import RABBIT_FRAME_PROMPT, JoyCaptionConfig, atomize_caption
 from unit05.living_prompt import (
     add_anchor_atoms,
     compiled_text,
@@ -23,6 +23,12 @@ def test_atomize_caption_accepts_json_array() -> None:
     assert atomize_caption('["white rabbit", "low camera"]') == [
         "white rabbit", "low camera"
     ]
+
+
+def test_caption_prompt_softly_deemphasizes_exact_lettering() -> None:
+    assert "low-salience visual material" in RABBIT_FRAME_PROMPT
+    assert "usually describe" in RABBIT_FRAME_PROMPT
+    assert "unless the lettering is visually dominant" in RABBIT_FRAME_PROMPT
 
 
 def test_config_reads_existing_joy_key(tmp_path: Path) -> None:

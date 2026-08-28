@@ -92,7 +92,9 @@ PROMPT = (
     "the three reference pictures, carrying over distinctive species, anatomy, face, hair, "
     "skin or fur, body shape, and costume traits instead of preserving the incoming performers. "
     "The characters' faces and species visibly derive from <Picture 1>. Their bodies and "
-    "silhouettes also visibly derive from <Picture 1>."
+    "silhouettes also visibly derive from <Picture 1>. Inherited garment slogans and "
+    "lettering are unstable memory: they tend to drift into partial, incorrect, "
+    "nonalphabetic, or abstract marks rather than being faithfully repeated."
 )
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff"}
 
@@ -768,5 +770,4 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
     main(args.limit)
-
 

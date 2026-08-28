@@ -13,7 +13,11 @@ RABBIT_FRAME_PROMPT = (
     "Return only a JSON array containing 6 to 12 concise, independent visual prompt fragments. "
     "Describe every human or character as an anthropomorphic rabbit, as though "
     "they were already rabbits in the image. Preserve the visible action, pose, composition, "
-    "camera, setting, lighting, materials, and mood. Do not mention transformation, "
+    "camera, setting, lighting, materials, and mood. Treat inherited slogans, logos, "
+    "watermarks, and garment lettering as low-salience visual material: usually describe "
+    "their presence, texture, or partial legibility instead of faithfully transcribing "
+    "the exact words, unless the lettering is visually dominant or structurally important. "
+    "Do not mention transformation, "
     "reinterpretation, a source image, or these instructions. Use present tense."
 )
 
