@@ -1,0 +1,1526 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 31,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "title": "H3 model \u00b7 DaSiWa hybrid",
+      "pos": [
+        -1280,
+        720
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "unet_name"
+          }
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "weight_dtype"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "dasiwa_minimax_h3_ref2va_v1_hybrid_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "MiniMaxH3SigmaShift",
+      "title": "H3 sampler shifts",
+      "pos": [
+        -900,
+        720
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "shift_video",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "shift_video"
+          }
+        },
+        {
+          "name": "shift_audio",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "shift_audio"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3SigmaShift"
+      },
+      "widgets_values": [
+        12.0,
+        3.0
+      ]
+    },
+    {
+      "id": 3,
+      "type": "CLIPLoader",
+      "title": "H3 text encoder",
+      "pos": [
+        -1280,
+        1040
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "clip_name"
+          }
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "type"
+          }
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "device"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors",
+        "minimax",
+        "default"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "title": "H3 video VAE",
+      "pos": [
+        -1280,
+        1320
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            3,
+            7,
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_fp16.safetensors"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "VAELoader",
+      "title": "H3 audio VAE",
+      "pos": [
+        -1280,
+        1500
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4,
+            8,
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_audio_vae_fp32.safetensors"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "VHS_LoadVideoFFmpeg",
+      "title": "LEFT endpoint \u00b7 upload full first clip",
+      "pos": [
+        -1250,
+        -250
+      ],
+      "size": [
+        420,
+        300
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "video"
+          }
+        },
+        {
+          "name": "force_rate",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "force_rate"
+          }
+        },
+        {
+          "name": "custom_width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "custom_width"
+          }
+        },
+        {
+          "name": "custom_height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "custom_height"
+          }
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "frame_load_cap"
+          }
+        },
+        {
+          "name": "start_time",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "start_time"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9,
+            20
+          ]
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            10,
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_LoadVideoFFmpeg"
+      },
+      "widgets_values": [
+        "",
+        24.0,
+        0,
+        0,
+        0,
+        0.0
+      ],
+      "color": "#29465b",
+      "bgcolor": "#436b86"
+    },
+    {
+      "id": 7,
+      "type": "VHS_LoadVideoFFmpeg",
+      "title": "RIGHT endpoint \u00b7 upload full second clip",
+      "pos": [
+        -1250,
+        140
+      ],
+      "size": [
+        420,
+        300
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "video"
+          }
+        },
+        {
+          "name": "force_rate",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "force_rate"
+          }
+        },
+        {
+          "name": "custom_width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "custom_width"
+          }
+        },
+        {
+          "name": "custom_height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "custom_height"
+          }
+        },
+        {
+          "name": "frame_load_cap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "frame_load_cap"
+          }
+        },
+        {
+          "name": "start_time",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "start_time"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11,
+            26
+          ]
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": []
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            12,
+            29
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_LoadVideoFFmpeg"
+      },
+      "widgets_values": [
+        "",
+        24.0,
+        0,
+        0,
+        0,
+        0.0
+      ],
+      "color": "#5b4329",
+      "bgcolor": "#866a43"
+    },
+    {
+      "id": 8,
+      "type": "MiniMaxH3ReferenceToVideo",
+      "title": "Instrumentality \u00b7 prompt + target canvas",
+      "pos": [
+        -700,
+        940
+      ],
+      "size": [
+        520,
+        480
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 3
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 4
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "prompt"
+          }
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "length"
+          }
+        },
+        {
+          "name": "ref_image_size",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "ref_image_size"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            5
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3ReferenceToVideo"
+      },
+      "widgets_values": [
+        "The two endpoint clips belong to one continuous shot. Generate only the natural motion, action, camera movement, and sound that bridges their exact states.",
+        1344,
+        768,
+        192,
+        "match"
+      ],
+      "color": "#363b2a",
+      "bgcolor": "#536044"
+    },
+    {
+      "id": 9,
+      "type": "ConditioningZeroOut",
+      "title": "empty negative conditioning",
+      "pos": [
+        -120,
+        1110
+      ],
+      "size": [
+        340,
+        240
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningZeroOut"
+      }
+    },
+    {
+      "id": 10,
+      "type": "MiniMaxH3Instrumentality",
+      "title": "Instrumentality \u00b7 fill AV gap v1",
+      "pos": [
+        -120,
+        320
+      ],
+      "size": [
+        560,
+        470
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 6
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 7
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 8
+        },
+        {
+          "name": "start_frames",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "name": "start_audio",
+          "type": "AUDIO",
+          "link": 10
+        },
+        {
+          "name": "end_frames",
+          "type": "IMAGE",
+          "link": 11
+        },
+        {
+          "name": "end_audio",
+          "type": "AUDIO",
+          "link": 12
+        },
+        {
+          "name": "start_fps",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "start_fps"
+          }
+        },
+        {
+          "name": "end_fps",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "end_fps"
+          }
+        },
+        {
+          "name": "preserve_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "preserve_frames"
+          }
+        },
+        {
+          "name": "crop",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "crop"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        },
+        {
+          "name": "middle_frames",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "edge_context_frames",
+          "type": "INT",
+          "links": [
+            22,
+            27
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3Instrumentality"
+      },
+      "widgets_values": [
+        24.0,
+        24.0,
+        39,
+        "disabled"
+      ],
+      "color": "#513146",
+      "bgcolor": "#7a4d69"
+    },
+    {
+      "id": 11,
+      "type": "KSampler",
+      "title": "H3 sample only the unlocked middle",
+      "pos": [
+        540,
+        600
+      ],
+      "size": [
+        390,
+        400
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "cfg"
+          }
+        },
+        {
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 14
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "denoise"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        0,
+        25,
+        1.0,
+        "res_multistep",
+        "simple",
+        1.0
+      ],
+      "color": "#513146",
+      "bgcolor": "#7a4d69"
+    },
+    {
+      "id": 12,
+      "type": "MiniMaxH3InstrumentalityDecodeAV",
+      "title": "Instrumentality \u00b7 decode AV v1",
+      "pos": [
+        1020,
+        640
+      ],
+      "size": [
+        360,
+        240
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 17
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 18
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 19
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            21
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3InstrumentalityDecodeAV"
+      },
+      "color": "#513146",
+      "bgcolor": "#7a4d69"
+    },
+    {
+      "id": 13,
+      "type": "H3ContinuousSeamlessJoinV14",
+      "title": "join left endpoint \u2192 H3 bridge \u00b7 15 ms audio",
+      "pos": [
+        1460,
+        200
+      ],
+      "size": [
+        480,
+        430
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "previous_images",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "name": "next_images",
+          "type": "IMAGE",
+          "link": 21
+        },
+        {
+          "name": "next_output_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "next_output_mode"
+          }
+        },
+        {
+          "name": "next_head_context_frames",
+          "type": "INT",
+          "link": 22
+        },
+        {
+          "name": "video_crossfade_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "video_crossfade_frames"
+          }
+        },
+        {
+          "name": "audio_crossfade_ms",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "audio_crossfade_ms"
+          }
+        },
+        {
+          "name": "luminance_match",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "luminance_match"
+          }
+        },
+        {
+          "name": "luminance_fade_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "luminance_fade_frames"
+          }
+        },
+        {
+          "name": "max_luminance_correction_percent",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "max_luminance_correction_percent"
+          }
+        },
+        {
+          "name": "max_safe_tail_bridge_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "max_safe_tail_bridge_frames"
+          }
+        },
+        {
+          "name": "previous_audio",
+          "type": "AUDIO",
+          "link": 23
+        },
+        {
+          "name": "next_audio",
+          "type": "AUDIO",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            25
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            28
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "H3ContinuousSeamlessJoinV14"
+      },
+      "widgets_values": [
+        "Final Clip",
+        4,
+        15.0,
+        false,
+        16,
+        10.0,
+        0
+      ],
+      "color": "#384c3b",
+      "bgcolor": "#58735c"
+    },
+    {
+      "id": 14,
+      "type": "H3ContinuousSeamlessJoinV14",
+      "title": "join H3 bridge \u2192 right endpoint \u00b7 15 ms audio",
+      "pos": [
+        2030,
+        200
+      ],
+      "size": [
+        500,
+        430
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "previous_images",
+          "type": "IMAGE",
+          "link": 25
+        },
+        {
+          "name": "next_images",
+          "type": "IMAGE",
+          "link": 26
+        },
+        {
+          "name": "next_output_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "next_output_mode"
+          }
+        },
+        {
+          "name": "next_head_context_frames",
+          "type": "INT",
+          "link": 27
+        },
+        {
+          "name": "video_crossfade_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "video_crossfade_frames"
+          }
+        },
+        {
+          "name": "audio_crossfade_ms",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "audio_crossfade_ms"
+          }
+        },
+        {
+          "name": "luminance_match",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "luminance_match"
+          }
+        },
+        {
+          "name": "luminance_fade_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "luminance_fade_frames"
+          }
+        },
+        {
+          "name": "max_luminance_correction_percent",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "max_luminance_correction_percent"
+          }
+        },
+        {
+          "name": "max_safe_tail_bridge_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "max_safe_tail_bridge_frames"
+          }
+        },
+        {
+          "name": "previous_audio",
+          "type": "AUDIO",
+          "link": 28
+        },
+        {
+          "name": "next_audio",
+          "type": "AUDIO",
+          "link": 29
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            30
+          ]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            31
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "H3ContinuousSeamlessJoinV14"
+      },
+      "widgets_values": [
+        "Final Clip",
+        4,
+        15.0,
+        false,
+        16,
+        10.0,
+        0
+      ],
+      "color": "#384c3b",
+      "bgcolor": "#58735c"
+    },
+    {
+      "id": 15,
+      "type": "VHS_VideoCombine",
+      "title": "SAVE \u00b7 complete endpoint A \u2192 gap \u2192 endpoint B",
+      "pos": [
+        2620,
+        300
+      ],
+      "size": [
+        430,
+        300
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 30
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "frame_rate"
+          }
+        },
+        {
+          "name": "loop_count",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "loop_count"
+          }
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "name": "format",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "pingpong"
+          }
+        },
+        {
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "save_output"
+          }
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 31
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": [
+        24.0,
+        0,
+        "Instrumentality/%date:yyyy-MM-dd%/%date:hhmmss%",
+        "video/h264-mp4",
+        false,
+        true
+      ],
+      "color": "#314d46",
+      "bgcolor": "#4d786d"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      3,
+      0,
+      8,
+      0,
+      "CLIP"
+    ],
+    [
+      3,
+      4,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      4,
+      5,
+      0,
+      8,
+      2,
+      "VAE"
+    ],
+    [
+      5,
+      8,
+      0,
+      9,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      6,
+      8,
+      1,
+      10,
+      0,
+      "LATENT"
+    ],
+    [
+      7,
+      4,
+      0,
+      10,
+      1,
+      "VAE"
+    ],
+    [
+      8,
+      5,
+      0,
+      10,
+      2,
+      "VAE"
+    ],
+    [
+      9,
+      6,
+      0,
+      10,
+      3,
+      "IMAGE"
+    ],
+    [
+      10,
+      6,
+      2,
+      10,
+      4,
+      "AUDIO"
+    ],
+    [
+      11,
+      7,
+      0,
+      10,
+      5,
+      "IMAGE"
+    ],
+    [
+      12,
+      7,
+      2,
+      10,
+      6,
+      "AUDIO"
+    ],
+    [
+      13,
+      2,
+      0,
+      11,
+      0,
+      "MODEL"
+    ],
+    [
+      14,
+      8,
+      0,
+      11,
+      6,
+      "CONDITIONING"
+    ],
+    [
+      15,
+      9,
+      0,
+      11,
+      7,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      10,
+      0,
+      11,
+      8,
+      "LATENT"
+    ],
+    [
+      17,
+      11,
+      0,
+      12,
+      0,
+      "LATENT"
+    ],
+    [
+      18,
+      4,
+      0,
+      12,
+      1,
+      "VAE"
+    ],
+    [
+      19,
+      5,
+      0,
+      12,
+      2,
+      "VAE"
+    ],
+    [
+      20,
+      6,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      21,
+      12,
+      0,
+      13,
+      1,
+      "IMAGE"
+    ],
+    [
+      22,
+      10,
+      2,
+      13,
+      3,
+      "INT"
+    ],
+    [
+      23,
+      6,
+      2,
+      13,
+      10,
+      "AUDIO"
+    ],
+    [
+      24,
+      12,
+      1,
+      13,
+      11,
+      "AUDIO"
+    ],
+    [
+      25,
+      13,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      26,
+      7,
+      0,
+      14,
+      1,
+      "IMAGE"
+    ],
+    [
+      27,
+      10,
+      2,
+      14,
+      3,
+      "INT"
+    ],
+    [
+      28,
+      13,
+      1,
+      14,
+      10,
+      "AUDIO"
+    ],
+    [
+      29,
+      7,
+      2,
+      14,
+      11,
+      "AUDIO"
+    ],
+    [
+      30,
+      14,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ],
+    [
+      31,
+      14,
+      1,
+      15,
+      7,
+      "AUDIO"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "UNIT05 \u00b7 Instrumentality v1 \u00b7 inputs",
+      "bounding": [
+        -1320,
+        -310,
+        550,
+        780
+      ],
+      "color": "#6d6d6d",
+      "font_size": 24
+    },
+    {
+      "title": "UNIT05 \u00b7 Instrumentality v1 \u00b7 H3 gap generation",
+      "bounding": [
+        -760,
+        270,
+        1860,
+        1160
+      ],
+      "color": "#895f83",
+      "font_size": 24
+    },
+    {
+      "title": "UNIT05 \u00b7 Instrumentality v1 \u00b7 context-aligned finishing",
+      "bounding": [
+        1400,
+        120,
+        1650,
+        610
+      ],
+      "color": "#63836a",
+      "font_size": 24
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.65,
+      "offset": [
+        1540,
+        660
+      ]
+    }
+  },
+  "version": 0.4
+}

@@ -12,6 +12,26 @@ from typing import Any
 
 SUPPORTED_SCHEMA = "dummyplug.h3-job.v1"
 JOB_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+DIRECTOR_INPUT_SCALING_MODES = {
+    "Off",
+    "Auto",
+    "Target",
+    "Fit",
+    "Fill and crop",
+    "Fit and pad",
+    "Long side with divisible crop",
+}
+LEGACY_INPUT_SCALING_ALIASES = {
+    "match": "Auto",
+    "max": "Auto",
+    "native": "Auto",
+    "fit": "Fit",
+    "fill": "Fill and crop",
+    "720": "Auto",
+    "1024": "Auto",
+    "Native (ShortEdge 2048px)": "Auto",
+    "Target · Selected Aspect & Resolution": "Target",
+}
 
 
 class BundleError(ValueError):
@@ -55,20 +75,21 @@ def _read_json(archive: zipfile.ZipFile, name: str) -> Any:
 
 
 def _normalize_legacy_scaling(manifest: dict[str, Any]) -> None:
-    """Translate Dummyplug's short-lived combined scaling field in memory.
+    """Translate Dummyplug's short-lived combined scaling options in memory.
 
-    Legacy bundles used ``input_scaling`` for the Director's ``ref_image_size``
-    value.  Leave the archive untouched so its declared checksum still verifies;
-    only the manifest passed to the executor receives the modern split fields.
+    Legacy bundles used one ``input_scaling`` field for both the Director's
+    reference-image-size and scaling controls. Leave the archive untouched so
+    its declared checksum still verifies; only the manifest passed to the
+    executor receives the modern split fields and canonical Director values.
     """
     generation = manifest.get("generation")
-    if not isinstance(generation, dict) or "ref_image_size" in generation:
+    if not isinstance(generation, dict):
         return
     legacy_value = generation.get("input_scaling")
-    if legacy_value not in {"match", "max"}:
-        return
-    generation["ref_image_size"] = legacy_value
-    generation["input_scaling"] = "Auto"
+    if "ref_image_size" not in generation:
+        generation["ref_image_size"] = legacy_value if legacy_value in {"match", "max"} else "match"
+    if legacy_value in LEGACY_INPUT_SCALING_ALIASES:
+        generation["input_scaling"] = LEGACY_INPUT_SCALING_ALIASES[legacy_value]
 
 
 def _validate_manifest(manifest: dict[str, Any]) -> None:
@@ -110,17 +131,8 @@ def _validate_manifest(manifest: dict[str, Any]) -> None:
         raise BundleError("Steps must be positive")
     if generation["ref_image_size"] not in {"match", "max"}:
         raise BundleError("ref_image_size must be 'match' or 'max'")
-    scaling_modes = {
-        "Off",
-        "Auto",
-        "Target",
-        "Fit",
-        "Fill and crop",
-        "Fit and pad",
-        "Long side with divisible crop",
-    }
-    if generation["input_scaling"] not in scaling_modes:
-        raise BundleError(f"input_scaling must be one of {sorted(scaling_modes)}")
+    if generation["input_scaling"] not in DIRECTOR_INPUT_SCALING_MODES:
+        raise BundleError(f"input_scaling must be one of {sorted(DIRECTOR_INPUT_SCALING_MODES)}")
     references = manifest.get("references")
     if not isinstance(references, list) or not references:
         raise BundleError("At least one reference is required")

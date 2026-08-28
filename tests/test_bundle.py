@@ -5,7 +5,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from unit05.bundle import BundleError, extract_bundle
+from unit05.bundle import DIRECTOR_INPUT_SCALING_MODES, BundleError, extract_bundle
 
 from .helpers import create_bundle, manifest
 
@@ -55,6 +55,60 @@ class BundleTests(unittest.TestCase):
             generation = extracted.manifest["generation"]
             self.assertEqual(generation["ref_image_size"], "match")
             self.assertEqual(generation["input_scaling"], "Auto")
+
+    def test_accepts_every_director_input_scaling_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for index, mode in enumerate(sorted(DIRECTOR_INPUT_SCALING_MODES)):
+                with self.subTest(mode=mode):
+                    generation = manifest()["generation"]
+                    generation["input_scaling"] = mode
+                    extracted = extract_bundle(
+                        create_bundle(root / f"mode-{index}.zip", override={"generation": generation}),
+                        root / f"expanded-{index}",
+                        max_files=100,
+                        max_uncompressed_bytes=100_000_000,
+                    )
+                    self.assertEqual(extracted.manifest["generation"]["input_scaling"], mode)
+
+    def test_normalizes_all_dummyplug_legacy_scaling_options(self) -> None:
+        expected = {
+            "match": ("match", "Auto"),
+            "max": ("max", "Auto"),
+            "native": ("match", "Auto"),
+            "fit": ("match", "Fit"),
+            "fill": ("match", "Fill and crop"),
+            "720": ("match", "Auto"),
+            "1024": ("match", "Auto"),
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for index, (legacy, normalized) in enumerate(expected.items()):
+                with self.subTest(legacy=legacy):
+                    generation = manifest()["generation"]
+                    generation.pop("ref_image_size")
+                    generation["input_scaling"] = legacy
+                    extracted = extract_bundle(
+                        create_bundle(root / f"legacy-{index}.zip", override={"generation": generation}),
+                        root / f"legacy-expanded-{index}",
+                        max_files=100,
+                        max_uncompressed_bytes=100_000_000,
+                    )
+                    actual = extracted.manifest["generation"]
+                    self.assertEqual((actual["ref_image_size"], actual["input_scaling"]), normalized)
+
+    def test_rejects_unknown_input_scaling_mode(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            generation = manifest()["generation"]
+            generation["input_scaling"] = "native-ish"
+            with self.assertRaisesRegex(BundleError, "input_scaling must be one of"):
+                extract_bundle(
+                    create_bundle(root / "invalid.zip", override={"generation": generation}),
+                    root / "expanded",
+                    max_files=100,
+                    max_uncompressed_bytes=100_000_000,
+                )
 
 
 if __name__ == "__main__":

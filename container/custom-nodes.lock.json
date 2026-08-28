@@ -1,0 +1,48 @@
+[
+  {
+    "name": "ComfyUI-DaSiWa-Nodes",
+    "repository": "https://github.com/darksidewalker/ComfyUI-DaSiWa-Nodes.git",
+    "revision": "38d59321ed0de75f7486e1212191647b9df476ec"
+  },
+  {
+    "name": "ComfyUI-H3-Motion-Context-MultiRef",
+    "repository": "https://github.com/seitanism/ComfyUI-H3-Motion-Context-MultiRef.git",
+    "revision": "87de57ba619297503fa49c9594c0c021d5b0c261"
+  },
+  {
+    "name": "ComfyUI-KJNodes",
+    "repository": "https://github.com/kijai/ComfyUI-KJNodes.git",
+    "revision": "3f20054214fec9f9234fd3841ae6f1e4287948f6"
+  },
+  {
+    "name": "ComfyUI-Manager",
+    "repository": "https://github.com/Comfy-Org/ComfyUI-Manager.git",
+    "revision": "f39cbd56fecae0b27a446c0cd450cd591f3a8bea"
+  },
+  {
+    "name": "ComfyUI-Spectrum-MiniMax-H3",
+    "repository": "https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3.git",
+    "revision": "ce9d35e8f5f6d93495d1d9cfc12183f2bfa4afc0"
+  },
+  {
+    "name": "ComfyUI-VideoHelperSuite",
+    "repository": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git",
+    "revision": "02dfc5ee26ceaaabd4c4dbff53e2075e258a626f"
+  },
+  {
+    "name": "Comfyui_Minimax_h3_latent_Upscaler",
+    "repository": "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git",
+    "revision": "6a4b191e8af583b7c097f564690325f91d18c2e2"
+  },
+  {
+    "name": "Herrgotts-H3-Infinite-Continuation-Suite",
+    "repository": "https://github.com/HerrgottMargott/Herrgotts-H3-Infinite-Continuation-Suite.git",
+    "revision": "4b1edd678de7356beebf3761b2532a35e07d0389"
+  },
+  {
+    "name": "rgthree-comfy",
+    "repository": "https://github.com/rgthree/rgthree-comfy.git",
+    "revision": "13b4399c00b5ef5a97b1b6800fc1185874740f5d"
+  }
+]
+
