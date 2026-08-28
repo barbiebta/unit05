@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from unit05.joycaption import RABBIT_FRAME_PROMPT, JoyCaptionConfig, atomize_caption
+from unit05.joycaption import (
+    RABBIT_FRAME_PROMPT,
+    JoyCaptionConfig,
+    atomize_caption,
+    sample_atoms,
+)
 from unit05.living_prompt import (
     add_anchor_atoms,
     compiled_text,
@@ -29,6 +34,20 @@ def test_caption_prompt_softly_deemphasizes_exact_lettering() -> None:
     assert "low-salience visual material" in RABBIT_FRAME_PROMPT
     assert "usually describe" in RABBIT_FRAME_PROMPT
     assert "unless the lettering is visually dominant" in RABBIT_FRAME_PROMPT
+
+
+def test_sample_atoms_selects_three_reproducibly() -> None:
+    candidates = [f"atom {index}" for index in range(12)]
+    first = sample_atoms(candidates, seed=42)
+    second = sample_atoms(candidates, seed=42)
+    assert first == second
+    assert len(first) == 3
+    assert len(set(first)) == 3
+    assert set(first) <= set(candidates)
+
+
+def test_sample_atoms_keeps_short_lists_intact() -> None:
+    assert sample_atoms(["one", "two"], seed=42) == ["one", "two"]
 
 
 def test_config_reads_existing_joy_key(tmp_path: Path) -> None:

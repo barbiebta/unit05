@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import json
+import random
 import re
 import subprocess
 import urllib.request
@@ -142,6 +143,15 @@ def atomize_caption(caption: str, *, limit: int = 16) -> list[str]:
         if len(atoms) >= limit:
             break
     return atoms
+
+
+def sample_atoms(
+    atoms: list[str], *, limit: int = 3, seed: int | None = None
+) -> list[str]:
+    candidates = list(atoms)
+    if len(candidates) <= limit:
+        return candidates
+    return random.Random(seed).sample(candidates, limit)
 
 
 def ferment_video_frame(

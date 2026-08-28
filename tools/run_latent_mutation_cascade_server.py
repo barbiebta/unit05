@@ -24,7 +24,7 @@ if not UNIT05_SOURCE.exists():
     UNIT05_SOURCE = Path(__file__).resolve().parent / "unit05"
 sys.path.insert(0, str(UNIT05_SOURCE))
 
-from unit05.joycaption import JoyCaptionConfig, ferment_video_frame
+from unit05.joycaption import JoyCaptionConfig, ferment_video_frame, sample_atoms
 from unit05.living_prompt import (
     compiled_text,
     load_state as load_living_state,
@@ -369,9 +369,10 @@ def record_living_prompt(step, full_prompt, snapshot):
 def ferment_finished_chunk(step, output_path):
     frame_path = JOY_FRAME_DIR / f"step_{int(step):04d}.jpg"
     config = JoyCaptionConfig.from_env_file(JOY_CONFIG_PATH)
-    caption, atoms = ferment_video_frame(
+    caption, candidate_atoms = ferment_video_frame(
         Path(output_path), frame_path, config, seed=23000 + int(step)
     )
+    atoms = sample_atoms(candidate_atoms, limit=3, seed=23000 + int(step))
     with living_state_lock(LIVING_PROMPT_PATH):
         state = load_living_state(LIVING_PROMPT_PATH)
         replace_fermented(
@@ -381,7 +382,8 @@ def ferment_finished_chunk(step, output_path):
         for entry in reversed(state.get("history") or []):
             if int(entry.get("step", -1)) == int(step):
                 entry["result_caption"] = caption
-                entry["result_atoms"] = atoms
+                entry["result_atoms"] = candidate_atoms
+                entry["injected_atoms"] = atoms
                 break
         state["active_step"] = None
         save_living_state(LIVING_PROMPT_PATH, state)
@@ -770,4 +772,3 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
     main(args.limit)
-
