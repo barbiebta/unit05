@@ -52,3 +52,6 @@ For delivery to an editor machine, mount the SSH key or other credential at run
 time and provide the existing `UNIT05_OUTPUT_*` environment variables. Never bake
 the key, Tailscale identity, API tokens, models, or outputs into the image.
 
+For the complete Vast sizing, volume, environment, model-placement, and
+first-boot checklist, see `container/VAST_DEPLOYMENT.md`.
+

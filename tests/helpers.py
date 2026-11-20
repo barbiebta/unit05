@@ -6,13 +6,18 @@ import zipfile
 from pathlib import Path
 
 
-def manifest(job_id: str = "job-test-001") -> dict:
+def manifest(job_id: str = "job-test-001", *, schema: str = "dummyplug.h3-job.v2") -> dict:
     return {
-        "schema": "dummyplug.h3-job.v1",
+        "schema": schema,
         "job_id": job_id,
+        "job_desc": "Reference trim test",
         "created_at": "2026-08-25T00:00:00Z",
         "title": "Reference trim test",
         "workflow": {"template": "dasiwa-ref2va", "version": 1},
+        "prompt_policy": {
+            "allCharactersTransgenderWomen": True,
+            "allowedVocabulary": {"man": False, "woman": True, "trans": True, "futa": True},
+        },
         "generation": {
             "width": 768,
             "height": 1344,
@@ -25,7 +30,13 @@ def manifest(job_id: str = "job-test-001") -> dict:
             "shift_audio": 3,
             "ref_image_size": "match",
             "input_scaling": "Auto",
-            "output": {"container": "Auto", "codec": "Auto", "quality": 21},
+            "output": {
+                "container": "mp4",
+                "codec": "Auto",
+                "quality": 21,
+                "audio_codec": "aac",
+                "audio_bitrate": "192k",
+            },
         },
         "references": [
             {
@@ -47,8 +58,14 @@ def manifest(job_id: str = "job-test-001") -> dict:
     }
 
 
-def create_bundle(path: Path, *, job_id: str = "job-test-001", override: dict | None = None) -> Path:
-    job_manifest = manifest(job_id)
+def create_bundle(
+    path: Path,
+    *,
+    job_id: str = "job-test-001",
+    schema: str = "dummyplug.h3-job.v2",
+    override: dict | None = None,
+) -> Path:
+    job_manifest = manifest(job_id, schema=schema)
     if override:
         job_manifest.update(override)
     members = {

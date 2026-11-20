@@ -1,4 +1,6 @@
 __pycache__/
 .pytest_cache/
+.pytest-temp*/
+.venv-test/
 tools/windows-delivery-status.txt
 tools/unit05-delivery-key-status.txt

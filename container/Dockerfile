@@ -60,5 +60,8 @@ WORKDIR /workspace
 VOLUME ["/workspace/ComfyUI/models", "/workspace/ComfyUI/input", "/workspace/ComfyUI/output", "/workspace/unit05-data"]
 EXPOSE 8188 18765
 
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5m --retries=10 \
+  CMD ["python", "/opt/unit05/container/healthcheck.py"]
+
 ENTRYPOINT ["/usr/bin/tini", "--", "/opt/unit05/container/start.sh"]
 

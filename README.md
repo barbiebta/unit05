@@ -109,7 +109,7 @@ container hostname, or current rebuild number is embedded in the Python modules.
 ## Safety
 
 - ZIP traversal and undeclared files are rejected.
-- Every v1 bundle file is checksum-verified.
+- Every supported v1 or canonical v2 bundle file is checksum-verified.
 - Stable job IDs plus bundle hashes prevent duplicate execution.
 - Comfy prompt IDs are journaled before waiting.
 - Outputs remain remote until destination delivery succeeds.
