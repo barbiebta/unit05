@@ -61,7 +61,11 @@ def sha256_file(path: Path) -> str:
 
 
 def _safe_member(name: str) -> PurePosixPath:
-    if "\\" in name or any(part in {"", ".", ".."} for part in name.split("/")):
+    if (
+        "\\" in name
+        or re.match(r"^[A-Za-z]:", name)
+        or any(part in {"", ".", ".."} for part in name.split("/"))
+    ):
         raise BundleError(f"Unsafe archive path: {name!r}")
     normalized = PurePosixPath(name)
     if normalized.is_absolute() or ".." in normalized.parts or not normalized.parts:

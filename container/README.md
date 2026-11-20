@@ -25,7 +25,7 @@ the working Comfy environment, and there was no SageAttention startup argument.
 Run this from the Unit05 repository root:
 
 ```bash
-docker build -f container/Dockerfile -t unit05-rebuild02:2026-08-28 .
+docker build -f container/Dockerfile -t unit05-rebuild02:2026-11-20 .
 ```
 
 The build needs internet access for the CUDA base image, PyTorch wheels, ComfyUI,
@@ -40,7 +40,7 @@ docker run --rm --gpus all \
   -v unit05-input:/workspace/ComfyUI/input \
   -v unit05-output:/workspace/ComfyUI/output \
   -v unit05-data:/workspace/unit05-data \
-  unit05-rebuild02:2026-08-28
+  unit05-rebuild02:2026-11-20
 ```
 
 ComfyUI listens on port 8188 and the ordinary Unit05 bundle executor listens on
