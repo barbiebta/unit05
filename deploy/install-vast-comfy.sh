@@ -21,11 +21,11 @@ mkdir -p \
   "${COMFYUI_ROOT}/user/default/workflows"
 
 if [[ ! -d "${COMFYUI_ROOT}/.git" ]]; then
-  if [[ -e "${COMFYUI_ROOT}" ]] && [[ -n "$(find "${COMFYUI_ROOT}" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
-    echo "${COMFYUI_ROOT} is nonempty and is not a Git checkout" >&2
-    exit 3
-  fi
-  git clone --filter=blob:none https://github.com/Comfy-Org/ComfyUI.git "${COMFYUI_ROOT}"
+  # Model restoration is allowed to create the standard data directories in
+  # parallel before ComfyUI itself is checked out. Initialize Git around them;
+  # checkout still refuses any actual untracked-file collision.
+  git -C "${COMFYUI_ROOT}" init -q
+  git -C "${COMFYUI_ROOT}" remote add origin https://github.com/Comfy-Org/ComfyUI.git
 fi
 git -C "${COMFYUI_ROOT}" remote set-url origin https://github.com/Comfy-Org/ComfyUI.git
 git -C "${COMFYUI_ROOT}" fetch -q origin "${COMFYUI_COMMIT}"
