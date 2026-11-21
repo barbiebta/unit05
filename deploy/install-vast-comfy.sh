@@ -41,7 +41,7 @@ fi
   torch==2.11.0+cu130 torchvision==0.26.0+cu130 torchaudio==2.11.0+cu130 \
   --index-url "${TORCH_INDEX}"
 grep -Eiv '^[[:space:]]*(torch|torchvision|torchaudio)([<=>~![:space:]]|$)' \
-  "${COMFYUI_ROOT}/requirements.txt" > /tmp/unit05-comfy-requirements.txt
+  "${COMFYUI_ROOT}/requirements.txt" > /tmp/unit05-comfy-requirements.txt || true
 "${UV}" pip install --python "${PYTHON}" -r /tmp/unit05-comfy-requirements.txt
 
 install_node() {
@@ -64,7 +64,7 @@ install_node() {
   fi
   if [[ -f "${destination}/requirements.txt" ]]; then
     grep -Eiv '^[[:space:]]*(torch|torchvision|torchaudio)([<=>~![:space:]]|$)' \
-      "${destination}/requirements.txt" > "/tmp/${name}-requirements.txt"
+      "${destination}/requirements.txt" > "/tmp/${name}-requirements.txt" || true
     [[ ! -s "/tmp/${name}-requirements.txt" ]] || \
       "${UV}" pip install --python "${PYTHON}" -r "/tmp/${name}-requirements.txt"
   fi
