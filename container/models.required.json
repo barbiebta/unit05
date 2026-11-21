@@ -2,26 +2,37 @@
   {
     "filename": "dasiwa_minimax_h3_ref2va_v1_hybrid_int8_convrot.safetensors",
     "destination": "models/diffusion_models",
+    "source": "r2:gehirnmodels/dasiwa_minimax_h3_ref2va_v1_hybrid_int8_convrot.safetensors",
+    "bytes": 34038897474,
     "required_by": "DaSiWa Ref2VA UNET loaders"
   },
   {
     "filename": "qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors",
     "destination": "models/text_encoders",
+    "source": "r2:gehirnmodels/qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors",
+    "bytes": 15683129587,
     "required_by": "MiniMax H3 text encoder"
   },
   {
     "filename": "minimax_h3_video_vae_fp16.safetensors",
     "destination": "models/vae",
+    "source": "r2:gehirnmodels/vae/minimax_h3_video_vae_fp16.safetensors",
+    "bytes": 5207808496,
     "required_by": "MiniMax H3 video VAE"
   },
   {
     "filename": "minimax_h3_audio_vae_fp32.safetensors",
     "destination": "models/vae",
+    "source": "r2:gehirnmodels/vae/minimax_h3_audio_vae_fp32.safetensors",
+    "bytes": 605254808,
     "required_by": "MiniMax H3 audio VAE"
   },
   {
     "filename": "taeh3.safetensors",
     "destination": "models/vae_approx",
+    "source": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors?download=true",
+    "bytes": 9791388,
+    "sha256": "f0f60fa072089997f817402098c2fd90777cb2660dd79cf5df42fc1e3e08e527",
     "required_by": "KJ model preview override"
   }
 ]

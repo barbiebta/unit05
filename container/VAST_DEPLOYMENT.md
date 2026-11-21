@@ -37,6 +37,18 @@ Use the immutable digest shown by the push when creating the Vast template.
 7. Place the files listed by `container/models.required.json` at their exact
    destinations beneath `/workspace/ComfyUI` before the first render.
 
+The editor already has an authenticated `r2:` rclone remote for the private
+`gehirnmodels` bucket. Copy that rclone configuration into a runtime secret at
+`/run/secrets/rclone.conf`, then restore the minimal API-worker model set with:
+
+```bash
+python /opt/unit05/container/sync-models.py
+```
+
+The four large private objects come from R2. `taeh3.safetensors` is fetched
+from Kijai's public Hugging Face repository and verified by both size and
+SHA-256. The script is idempotent and writes through `.part` files.
+
 The container starts both services. Docker reports healthy only after Unit05's
 worker thread is alive and ComfyUI answers `/system_stats`.
 
