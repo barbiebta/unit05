@@ -36,6 +36,38 @@ def _safe_filename(value: str) -> str:
     return cleaned[:160] or "asset"
 
 
+def _canonical_option(value: Any, aliases: dict[str, str], default: str = "Auto") -> str:
+    text = str(value or default).strip()
+    return aliases.get(text.casefold(), text)
+
+
+_CONTAINER_OPTIONS = {
+    "auto": "Auto",
+    "webm": "WebM",
+    "mkv": "MKV",
+    "mp4": "MP4",
+    "animated webp": "Animated WebP",
+    "animated avif": "Animated AVIF",
+}
+_CODEC_OPTIONS = {
+    "auto": "Auto",
+    "av1": "AV1",
+    "vp9": "VP9",
+    "h.265 (hevc)": "H.265 (HEVC)",
+    "h265": "H.265 (HEVC)",
+    "hevc": "H.265 (HEVC)",
+    "h.264": "H.264",
+    "h264": "H.264",
+    "avc": "H.264",
+}
+_AUDIO_CODEC_OPTIONS = {
+    "auto": "Auto",
+    "aac": "AAC",
+    "opus": "Opus",
+    "mp3": "MP3",
+}
+
+
 def _node_by_class(graph: dict[str, Any], class_type: str) -> tuple[str, dict[str, Any]]:
     matches = [(node_id, node) for node_id, node in graph.items() if node.get("class_type") == class_type]
     if len(matches) != 1:
@@ -147,10 +179,12 @@ def build_prompt_graph(
         elif class_type == "DaSiWa_EnhancedVideoCombine":
             output = generation.get("output") or {}
             inputs["filename_prefix"] = f"unit05/{job_prefix}/render"
-            inputs["container"] = str(output.get("container", "Auto"))
-            inputs["codec"] = str(output.get("codec", "Auto"))
+            inputs["container"] = _canonical_option(output.get("container"), _CONTAINER_OPTIONS)
+            inputs["codec"] = _canonical_option(output.get("codec"), _CODEC_OPTIONS)
             inputs["quality"] = int(output.get("quality", 21))
-            inputs["audio_codec"] = str(output.get("audio_codec", "Auto"))
+            inputs["audio_codec"] = _canonical_option(
+                output.get("audio_codec"), _AUDIO_CODEC_OPTIONS
+            )
             inputs["audio_bitrate"] = str(output.get("audio_bitrate", "192k"))
             inputs["save_output"] = True
 

@@ -47,6 +47,13 @@ class AdapterTests(unittest.TestCase):
             self.assertTrue(all(node["inputs"]["steps"] == 25 for node in schedulers))
             shifts = [node for node in staged.graph.values() if node["class_type"] == "MiniMaxH3SigmaShift"]
             self.assertTrue(all(node["inputs"]["shift_video"] == 12 for node in shifts))
+            combine = next(
+                node for node in staged.graph.values()
+                if node["class_type"] == "DaSiWa_EnhancedVideoCombine"
+            )
+            self.assertEqual(combine["inputs"]["container"], "MP4")
+            self.assertEqual(combine["inputs"]["codec"], "Auto")
+            self.assertEqual(combine["inputs"]["audio_codec"], "AAC")
             self.assertEqual(len(staged.staged_inputs), 1)
 
     def test_passes_every_director_input_scaling_mode_unchanged(self) -> None:
